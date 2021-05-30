@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PoolPartyV2.Data;
 using PoolPartyV2.Models;
+using PoolPartyV2.Models.Views;
 
 namespace PoolPartyV2.Pages.Licencies
 {
@@ -24,6 +26,8 @@ namespace PoolPartyV2.Pages.Licencies
 
         [BindProperty]
         public Licencie Licencie { get; set; }
+
+        public IList<IdentityRole> roles { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -69,6 +73,48 @@ namespace PoolPartyV2.Pages.Licencies
             }
 
             return RedirectToPage("./Index");
+        }
+
+        /*
+         * Permet d'afficher les roles de l'utilisateur
+         */
+        public async Task<IActionResult> ManageUserRoles(int? userID)
+        {
+            var user = await _context.Licensie.FirstOrDefaultAsync(m => m.ID == userID);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new List<UserRolesViewModel>();
+
+            roles = await _context.Roles.ToListAsync();
+
+            foreach (var role in roles)
+            {
+                UserRolesViewModel userRole = new UserRolesViewModel();
+                userRole.RoleId = role.Id;
+                userRole.RoleName = role.Name;
+
+                var asRole = await _context.UserRoles.Include(e => e.UserId)
+                    .Where(e => e.RoleId.Contains(role.Id))
+                    .Where(e => e.UserId.Contains((char)userID))
+                    .ToListAsync();
+
+                if (asRole != null)
+                {
+                    userRole.IsSelected = true;
+                }
+                else
+                {
+                    userRole.IsSelected = false;
+                }
+
+                model.Add(userRole);
+            }
+
+            return Page();
         }
 
         private bool LicencieExists(int id)
