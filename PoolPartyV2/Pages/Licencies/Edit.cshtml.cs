@@ -22,7 +22,7 @@ namespace PoolPartyV2.Pages.Licencies
 
         [BindProperty]
         public Licencie Licencie { get; set; }
-
+        [BindProperty]
         public IList<UserRolesViewModel> UserRoles { get; set; }
 
         public IList<IdentityRole> roles { get; set; }

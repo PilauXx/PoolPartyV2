@@ -12,6 +12,9 @@ namespace PoolPartyV2.Models
         public int ID { get; set; }
 
         [Required]
+        public String Nom { get; set; }
+
+        [Required]
         public Jeu jeu { get; set; }
 
         public ICollection<Equipe> Equipes { get; set; }
