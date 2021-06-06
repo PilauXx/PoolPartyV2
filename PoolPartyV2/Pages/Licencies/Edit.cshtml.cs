@@ -17,17 +17,20 @@ namespace PoolPartyV2.Pages.Licencies
     [Authorize]
     public class EditModel : PageModel
     {
+
         private readonly PoolPartyV2.Data.ApplicationDbContext _context;
+
+        [BindProperty]
+        public Licencie Licencie { get; set; }
+
+        public IList<UserRolesViewModel> UserRoles { get; set; }
+
+        public IList<IdentityRole> roles { get; set; }
 
         public EditModel(PoolPartyV2.Data.ApplicationDbContext context)
         {
             _context = context;
         }
-
-        [BindProperty]
-        public Licencie Licencie { get; set; }
-
-        public IList<IdentityRole> roles { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -42,6 +45,28 @@ namespace PoolPartyV2.Pages.Licencies
             {
                 return NotFound();
             }
+            roles = await _context.Roles.ToListAsync();
+            UserRoles = new List<UserRolesViewModel>();
+            foreach (IdentityRole role in roles)
+            {
+                UserRolesViewModel userRole = new UserRolesViewModel();
+                userRole.RoleId = role.Id;
+                userRole.RoleName = role.Name; 
+
+                var asRole = _context.UserRoles.Where(e => e.RoleId.Equals(role.Id) && e.UserId.Equals((char)id)).FirstOrDefault();
+
+                if (asRole != null)
+                {
+                    userRole.IsSelected = true;
+                }
+                else
+                {
+                    userRole.IsSelected = false;
+                }
+
+                UserRoles.Add(userRole);
+            }
+
             return Page();
         }
 
@@ -52,6 +77,17 @@ namespace PoolPartyV2.Pages.Licencies
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+           foreach(UserRolesViewModel userRole in UserRoles)
+            {
+                if (userRole.IsSelected)
+                {
+                    var asRole = _context.UserRoles.Where(e => e.RoleId.Equals(userRole.RoleId) && e.UserId.Equals(userRole.userId)).FirstOrDefault();
+                    /*if (asRole == null)
+                        await _context.user*/
+
+                }
             }
 
             _context.Attach(Licencie).State = EntityState.Modified;
@@ -73,48 +109,6 @@ namespace PoolPartyV2.Pages.Licencies
             }
 
             return RedirectToPage("./Index");
-        }
-
-        /*
-         * Permet d'afficher les roles de l'utilisateur
-         */
-        public async Task<IActionResult> ManageUserRoles(int? userID)
-        {
-            var user = await _context.Licensie.FirstOrDefaultAsync(m => m.ID == userID);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var model = new List<UserRolesViewModel>();
-
-            roles = await _context.Roles.ToListAsync();
-
-            foreach (var role in roles)
-            {
-                UserRolesViewModel userRole = new UserRolesViewModel();
-                userRole.RoleId = role.Id;
-                userRole.RoleName = role.Name;
-
-                var asRole = await _context.UserRoles.Include(e => e.UserId)
-                    .Where(e => e.RoleId.Contains(role.Id))
-                    .Where(e => e.UserId.Contains((char)userID))
-                    .ToListAsync();
-
-                if (asRole != null)
-                {
-                    userRole.IsSelected = true;
-                }
-                else
-                {
-                    userRole.IsSelected = false;
-                }
-
-                model.Add(userRole);
-            }
-
-            return Page();
         }
 
         private bool LicencieExists(int id)

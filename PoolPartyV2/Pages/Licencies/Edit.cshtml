@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    int i = 0;
 }
 
 <h1>Edit</h1>
@@ -12,6 +13,7 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Licencie.ID" />
             <div class="form-group">
@@ -34,15 +36,27 @@
                     <input class="form-check-input" asp-for="Licencie.LienceValidate" /> @Html.DisplayNameFor(model => model.Licencie.LienceValidate)
                 </label>
             </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Ajouter/suprimer un/des role(s)</h3>
+                </div>
+                <div class="card-body">
+                    @foreach (var item in Model.UserRoles)
+                    {
+                        <div class="form-check m-1">
+                            <input asp-for="UserRoles[i].IsSelected" value="@item.IsSelected" class="form-check-input" />
+                            <label class="form-check-label"> @Html.DisplayFor(modelItem => item.RoleName)</label>
+                        </div>
+                        i++;
+                    }
+                </div>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
 
-            <div class="card-footer">
-                <a asp-action="ManageuserRoles" style="width:auto" class="btn btn-primary">
-                    Manage Roles
-                </a>
-            </div>
         </form>
     </div>
 </div>
