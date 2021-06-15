@@ -16,6 +16,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Equipe[0].Nom)
             </th>
+
             <th></th>
         </tr>
     </thead>
@@ -25,6 +26,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Nom)
             </td>
+
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |

@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolPartyV2.Data;
 
-namespace PoolPartyV2.Data.Migrations
+namespace PoolPartyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210606153401_deleteIduserToLicenciee")]
-    partial class deleteIduserToLicenciee
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,6 +241,10 @@ namespace PoolPartyV2.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("jeuID")
                         .HasColumnType("int");
 
@@ -263,6 +265,12 @@ namespace PoolPartyV2.Data.Migrations
                     b.Property<int?>("CompetitionID")
                         .HasColumnType("int");
 
+                    b.Property<int>("IDJeu")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JeuID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -270,6 +278,8 @@ namespace PoolPartyV2.Data.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("CompetitionID");
+
+                    b.HasIndex("JeuID");
 
                     b.ToTable("Equipe");
                 });
@@ -465,6 +475,10 @@ namespace PoolPartyV2.Data.Migrations
                     b.HasOne("PoolPartyV2.Models.Competition", null)
                         .WithMany("Equipes")
                         .HasForeignKey("CompetitionID");
+
+                    b.HasOne("PoolPartyV2.Models.Jeu", null)
+                        .WithMany("Equipes")
+                        .HasForeignKey("JeuID");
                 });
 
             modelBuilder.Entity("PoolPartyV2.Models.Etape", b =>
@@ -529,6 +543,8 @@ namespace PoolPartyV2.Data.Migrations
             modelBuilder.Entity("PoolPartyV2.Models.Jeu", b =>
                 {
                     b.Navigation("Competitions");
+
+                    b.Navigation("Equipes");
                 });
 #pragma warning restore 612, 618
         }

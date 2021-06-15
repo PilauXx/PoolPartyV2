@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolPartyV2.Data;
 
-namespace PoolPartyV2.Data.Migrations
+namespace PoolPartyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210606165248_addNameCompetition")]
-    partial class addNameCompetition
+    [Migration("20210607083948_bddv2")]
+    partial class bddv2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -265,6 +265,9 @@ namespace PoolPartyV2.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("CompetitionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IDJeu")
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
