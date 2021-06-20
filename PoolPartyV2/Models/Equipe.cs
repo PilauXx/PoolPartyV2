@@ -14,8 +14,9 @@ namespace PoolPartyV2.Models
         [Required]
         public string Nom { get; set; }
 
-        public ICollection<Licencie> Licensies { get; set; }
-
-        public Jeu jeu;
+        [Display(Name = "Membres de l'équipe")]
+        public ICollection<MembreEquipe> Licensies { get; set; }
+        public Jeu jeu { get; set; }
+        public int? IDJeu { get; set; }
     }
 }

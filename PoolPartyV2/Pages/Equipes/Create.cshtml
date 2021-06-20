@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    int i = 0;
 }
 
 <h1>Create</h1>
@@ -16,6 +17,9 @@
             <div class="form-group">
                 <label asp-for="Equipe.Nom" class="control-label"></label>
                 <input asp-for="Equipe.Nom" class="form-control" />
+                <span asp-validation-for="Equipe.Nom" class="text-danger"></span>
+                <label asp-for="Equipe.IDJeu" class="control-label">Selectionnez le jeu</label>
+                <select asp-for="Equipe.IDJeu" class="form-control" asp-items="ViewBag.JEU"></select>
                 <span asp-validation-for="Equipe.Nom" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -34,6 +34,5 @@ namespace PoolPartyV2.Models
             else
                 return EquipeB;
         }
-
     }
 }

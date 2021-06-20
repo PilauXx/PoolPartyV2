@@ -10,8 +10,8 @@ using PoolPartyV2.Data;
 namespace PoolPartyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210607083948_bddv2")]
-    partial class bddv2
+    [Migration("20210620102326_3")]
+    partial class _3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -267,16 +267,21 @@ namespace PoolPartyV2.Migrations
                     b.Property<int?>("CompetitionID")
                         .HasColumnType("int");
 
-                    b.Property<int>("IDJeu")
+                    b.Property<int?>("IDJeu")
                         .HasColumnType("int");
 
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("jeuID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
                     b.HasIndex("CompetitionID");
+
+                    b.HasIndex("jeuID");
 
                     b.ToTable("Equipe");
                 });
@@ -472,6 +477,12 @@ namespace PoolPartyV2.Migrations
                     b.HasOne("PoolPartyV2.Models.Competition", null)
                         .WithMany("Equipes")
                         .HasForeignKey("CompetitionID");
+
+                    b.HasOne("PoolPartyV2.Models.Jeu", "jeu")
+                        .WithMany("Equipes")
+                        .HasForeignKey("jeuID");
+
+                    b.Navigation("jeu");
                 });
 
             modelBuilder.Entity("PoolPartyV2.Models.Etape", b =>
@@ -536,6 +547,8 @@ namespace PoolPartyV2.Migrations
             modelBuilder.Entity("PoolPartyV2.Models.Jeu", b =>
                 {
                     b.Navigation("Competitions");
+
+                    b.Navigation("Equipes");
                 });
 #pragma warning restore 612, 618
         }

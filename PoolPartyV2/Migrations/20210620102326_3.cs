@@ -2,7 +2,7 @@
 
 namespace PoolPartyV2.Migrations
 {
-    public partial class update : Migration
+    public partial class _3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

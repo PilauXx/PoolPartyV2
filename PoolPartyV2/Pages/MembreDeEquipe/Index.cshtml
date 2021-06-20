@@ -1,0 +1,47 @@
+﻿@page
+@model PoolPartyV2.Pages.MembreDeEquipe.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Membres de l'équipe</h1>
+
+<p>
+    <a asp-page="Create" asp-route-id="@Model.EquipeID">Ajouter un membre</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MembreEquipe[0].IDLicencie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MembreEquipe[0].Licencie.Nom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MembreEquipe[0].Confirmed)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.MembreEquipe) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IDLicencie)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Licencie.Prenom)
+                @Html.DisplayFor(modelItem => item.Licencie.Nom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Confirmed)
+            </td>
+            <td>
+                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PoolPartyV2.Migrations
 {
-    public partial class bddv2 : Migration
+    public partial class _1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -208,7 +208,8 @@ namespace PoolPartyV2.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IDJeu = table.Column<int>(type: "int", nullable: false),
+                    jeuID = table.Column<int>(type: "int", nullable: true),
+                    IDJeu = table.Column<int>(type: "int", nullable: true),
                     CompetitionID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -218,6 +219,12 @@ namespace PoolPartyV2.Migrations
                         name: "FK_Equipe_Competition_CompetitionID",
                         column: x => x.CompetitionID,
                         principalTable: "Competition",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Equipe_Jeu_jeuID",
+                        column: x => x.jeuID,
+                        principalTable: "Jeu",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -364,6 +371,11 @@ namespace PoolPartyV2.Migrations
                 name: "IX_Equipe_CompetitionID",
                 table: "Equipe",
                 column: "CompetitionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Equipe_jeuID",
+                table: "Equipe",
+                column: "jeuID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EquipeLicencie_LicensiesID",

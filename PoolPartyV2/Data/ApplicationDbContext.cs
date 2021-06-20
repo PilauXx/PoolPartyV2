@@ -28,5 +28,6 @@ namespace PoolPartyV2.Data
         public DbSet<Jeu> Jeu { get; set; }
         public DbSet<Licencie> Licensie { get; set; }
         public DbSet<Rencontre> Rencontre { get; set; }
+        public DbSet<MembreEquipe> MembreEquipes { get; set; }
     }
 }

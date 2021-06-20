@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PoolPartyV2.Data;
 
 namespace PoolPartyV2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210620102040_2")]
+    partial class _2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("EquipeLicencie", b =>
+                {
+                    b.Property<int>("EquipesID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LicensiesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("EquipesID", "LicensiesID");
+
+                    b.HasIndex("LicensiesID");
+
+                    b.ToTable("EquipeLicencie");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -253,9 +270,6 @@ namespace PoolPartyV2.Migrations
                     b.Property<int?>("IDJeu")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LicencieID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -266,8 +280,6 @@ namespace PoolPartyV2.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("CompetitionID");
-
-                    b.HasIndex("LicencieID");
 
                     b.HasIndex("jeuID");
 
@@ -341,37 +353,6 @@ namespace PoolPartyV2.Migrations
                     b.ToTable("Licensie");
                 });
 
-            modelBuilder.Entity("PoolPartyV2.Models.MembreEquipe", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Confirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("EquipeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IDEquipe")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IDLicencie")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LicencieID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("EquipeID");
-
-                    b.HasIndex("LicencieID");
-
-                    b.ToTable("MembreEquipes");
-                });
-
             modelBuilder.Entity("PoolPartyV2.Models.Rencontre", b =>
                 {
                     b.Property<int>("ID")
@@ -412,6 +393,21 @@ namespace PoolPartyV2.Migrations
                     b.HasIndex("jeuID");
 
                     b.ToTable("Rencontre");
+                });
+
+            modelBuilder.Entity("EquipeLicencie", b =>
+                {
+                    b.HasOne("PoolPartyV2.Models.Equipe", null)
+                        .WithMany()
+                        .HasForeignKey("EquipesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PoolPartyV2.Models.Licencie", null)
+                        .WithMany()
+                        .HasForeignKey("LicensiesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -482,10 +478,6 @@ namespace PoolPartyV2.Migrations
                         .WithMany("Equipes")
                         .HasForeignKey("CompetitionID");
 
-                    b.HasOne("PoolPartyV2.Models.Licencie", null)
-                        .WithMany("Equipes")
-                        .HasForeignKey("LicencieID");
-
                     b.HasOne("PoolPartyV2.Models.Jeu", "jeu")
                         .WithMany("Equipes")
                         .HasForeignKey("jeuID");
@@ -506,21 +498,6 @@ namespace PoolPartyV2.Migrations
                     b.Navigation("Competition");
 
                     b.Navigation("EtapeSuivante");
-                });
-
-            modelBuilder.Entity("PoolPartyV2.Models.MembreEquipe", b =>
-                {
-                    b.HasOne("PoolPartyV2.Models.Equipe", "Equipe")
-                        .WithMany("Licensies")
-                        .HasForeignKey("EquipeID");
-
-                    b.HasOne("PoolPartyV2.Models.Licencie", "Licencie")
-                        .WithMany()
-                        .HasForeignKey("LicencieID");
-
-                    b.Navigation("Equipe");
-
-                    b.Navigation("Licencie");
                 });
 
             modelBuilder.Entity("PoolPartyV2.Models.Rencontre", b =>
@@ -559,11 +536,6 @@ namespace PoolPartyV2.Migrations
                     b.Navigation("Etapes");
                 });
 
-            modelBuilder.Entity("PoolPartyV2.Models.Equipe", b =>
-                {
-                    b.Navigation("Licensies");
-                });
-
             modelBuilder.Entity("PoolPartyV2.Models.Etape", b =>
                 {
                     b.Navigation("EtapesPrecedantes");
@@ -576,11 +548,6 @@ namespace PoolPartyV2.Migrations
                 {
                     b.Navigation("Competitions");
 
-                    b.Navigation("Equipes");
-                });
-
-            modelBuilder.Entity("PoolPartyV2.Models.Licencie", b =>
-                {
                     b.Navigation("Equipes");
                 });
 #pragma warning restore 612, 618

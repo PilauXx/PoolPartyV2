@@ -23,7 +23,7 @@ namespace PoolPartyV2.Pages.Equipes
 
         public async Task OnGetAsync()
         {
-            Equipe = await _context.Equipe.ToListAsync();
+            Equipe = await _context.Equipe.Include(j => j.jeu).ToListAsync();
         }
     }
 }

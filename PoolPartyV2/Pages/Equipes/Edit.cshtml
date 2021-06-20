@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    int i = 0;
 }
 
 <h1>Edit</h1>
@@ -18,6 +19,19 @@
                 <label asp-for="Equipe.Nom" class="control-label"></label>
                 <input asp-for="Equipe.Nom" class="form-control" />
                 <span asp-validation-for="Equipe.Nom" class="text-danger"></span>
+                <label asp-for="Equipe.IDJeu" class="control-label">Selectionnez le jeu</label>
+                <select asp-for="Equipe.IDJeu" class="form-control" asp-items="ViewBag.JEU"></select>
+                <div class="card-body">
+                    <label class="control-label">Les joueurs :</label>
+                    @foreach (var item in Model.licencieParticipations)
+                    {
+                        <div class="form-check m-1">
+                            <input asp-for="licencieParticipations[i].IsSelected" value="@item.IsSelected" class="form-check-input" />
+                            <label class="form-check-label"> @Html.DisplayFor(modelItem => item.NomLicencie)</label>
+                        </div>
+                        i++;
+                    }
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

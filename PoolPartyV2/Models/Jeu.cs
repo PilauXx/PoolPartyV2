@@ -15,5 +15,7 @@ namespace PoolPartyV2.Models
         public string Nom { get; set; }
 
         public ICollection<Competition> Competitions { get; set; }
+
+        public ICollection<Equipe> Equipes { get; set; }
     }
 }

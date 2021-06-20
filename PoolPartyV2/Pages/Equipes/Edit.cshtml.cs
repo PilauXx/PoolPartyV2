@@ -8,12 +8,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PoolPartyV2.Data;
 using PoolPartyV2.Models;
+using PoolPartyV2.Models.Views;
 
 namespace PoolPartyV2.Pages.Equipes
 {
     public class EditModel : PageModel
     {
         private readonly PoolPartyV2.Data.ApplicationDbContext _context;
+        private IList<Licencie> licencies { get; set; }
+        public IList<LicencieParticipationViewModels> licencieParticipations { get; set; }
 
         public EditModel(PoolPartyV2.Data.ApplicationDbContext context)
         {
@@ -29,13 +32,36 @@ namespace PoolPartyV2.Pages.Equipes
             {
                 return NotFound();
             }
-
-            Equipe = await _context.Equipe.FirstOrDefaultAsync(m => m.ID == id);
-
+            licencieParticipations = new List<LicencieParticipationViewModels>();
+            Equipe = await _context.Equipe
+                .Include(u => u.jeu).FirstOrDefaultAsync(m => m.ID == id);
+            
             if (Equipe == null)
             {
                 return NotFound();
             }
+
+            ViewData["JEU"] = new SelectList(_context.Jeu, "ID", "Nom");
+
+            licencies = await _context.Licensie.ToListAsync();
+            foreach(Licencie licencie in licencies)
+            {
+                var selected = _context.MembreEquipes
+                    .Where(e => e.IDEquipe.Equals(id) && e.IDLicencie.Equals(licencie.ID))
+                    .FirstOrDefaultAsync();
+                LicencieParticipationViewModels licencieParti = new LicencieParticipationViewModels();
+                licencieParti.idLiecencie = licencie.ID;
+                licencieParti.NomLicencie = licencie.Nom;
+                if (selected != null)
+                {
+                    licencieParti.IsSelected = true;
+                }else
+                {
+                    licencieParti.IsSelected = false;
+                }
+                licencieParticipations.Add(licencieParti);
+            }
+
             return Page();
         }
 
